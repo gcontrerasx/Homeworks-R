@@ -1,0 +1,42 @@
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+#HOMEWORK NO 1.
+#24 Febrero 2023.
+#Maestria en Ingenieria para la Industria
+#con especialidad en Ciencias de la Computacion. 
+#Alumno:German Contreras Jacinto. 
+#Carnet: 999011685
+
+```{r}
+#Create a matrix 5x5 with random float values
+weights_values=round(runif(25, min=160, max=200),2)
+matrix_weights<-matrix(weights_values, byrow=TRUE, nrow=5)
+matrix_weights
+
+#Assign names to columns and rows
+months_name<-c("January", "February", "March", "April", "May")
+person_name<-c("Erick", "Andres", "Gerson", "Juan", "Luis")
+colnames(matrix_weights)<-months_name
+rownames(matrix_weights)<-person_name
+matrix_weights
+
+#mean weight for person
+person_mean<-round(rowMeans(matrix_weights),2)
+person_mean
+
+#add column mean person weight
+total_matrix_weights<-cbind(matrix_weights,person_mean)
+total_matrix_weights
+
+#mean weight for month
+month_mean<-round(colMeans(total_matrix_weights),2)
+month_mean
+
+#add row mean month weight
+total_matrix_weights_v2<-rbind(total_matrix_weights,month_mean)
+total_matrix_weights_v2
+```
