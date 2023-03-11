@@ -1,0 +1,87 @@
+#Funciones en R
+#ESTRUCTURA DE UNA FUNCION
+#Una funcion es un conjunto de instrucciones que convierten las entradas (argumentos)
+# en una salida deseada (ouput).
+
+#Partes de una funcion:
+#a. Entradas o argumentos: se ingresa la informacion para realizar el procedimiento.
+#b. Codigo: formado por un conjunto de instrucciones que transforman las entradas en una salida deseada.
+#c. Salida: Es el resultado de la funcion.
+
+#demo_function <- function(arg1, arg2.....){
+#codigo
+#codigo
+#return (result)
+#}
+
+#EJEMPLO DE UNA FUNCION
+
+```{r}
+square <- function(x){
+result <- x**2
+return(result)
+}
+square(2)
+```
+#ARGUMENTOS DE UNA FUNCION
+#Son una serie de valores (opcionales) que se pasan por la funcion, de modo
+#que ciertas variables dentro de estas posean valores en cada llamada de funcion
+```{r}
+area <- function(var1, var2){
+  area=var1*var2
+  return(area)
+}
+area(10,5)
+
+```
+#ARGUMENTOS POR VALOR
+#en este caso indicamos explicitamente el valor de las variables, cuando una funcion tiene muchos parametros esto puede ser util.
+```{r}
+area_triangle <-function(b,h){
+  area_t=b*h/2
+  return(area_t)
+}
+area_triangle(b=10,h=60)
+```
+#FAMILIA APPLY
+#Aplica una funcion a un dataframe, matriz o lista escogiendo si se va aplicar
+#a las columnas o a las filas
+```{r}
+#creacion de data
+name<-c("Erick", "Andres", "Jose", "Byron", "Jostin","Beatriz")
+age<-c(34,30,21,32,24,35)
+height<-c(168,175,163,181,180,155)
+weight<-c(170,210,140,190,240,140)
+gender<-c("Male","Male","Male","Male","Male","Female")
+team_df<-data.frame(name,age,height,weight,gender)
+team_df
+
+#Ejemplo calcular la media de las columnas: age, height, weight
+apply(team_df[,c(2,3,4)],2,mean)
+```
+#FUNCION LAPPLY()
+#La funcion lapply()realiza operaciones en una lista, pero igualmente admite
+#otro tipo de objeto.  La diferencia con apply() es que la funcion devuelve una 
+#lista
+
+```{r}
+#Ejemplo calcular la mediana de las columnas: age, height, weight
+lapply(team_df[,c(2,3,4)],median)
+```
+#FUNCION SAPPLY()
+#La funcion sapply() realiza operaciones a una lista, pero tambien admite otro
+#tipo de objeto.  La diferencia con apply() es que devuelve un vector
+```{r}
+#Ejemplo calcular la desviacion estandar de las columnas: age, height, weight
+sapply(team_df[,c(2,3,4)], sd)
+```
+#FUNCION TAPPLY()
+#La funcion tapply le aplica una funcion a los datos agrupados.
+
+```{r}
+#Ejemplo aca aplicamos la funcion a la columna de genero y sacar la media 
+#de la columna edad.
+tapply(team_df$age,team_df$gender,mean)
+```
+
+
