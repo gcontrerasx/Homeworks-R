@@ -1,3 +1,6 @@
+#HOMEWORK-2.
+#10 MARZO 2023.
+#ALUMNO: German Contreras Jacinto.
 #Funciones en R
 #ESTRUCTURA DE UNA FUNCION
 #Una funcion es un conjunto de instrucciones que convierten las entradas (argumentos)
