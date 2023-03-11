@@ -109,6 +109,7 @@ all_students_grade
 #7.3 UTILICE LAPPLY PASANDO DE PASANDO LA FUNCION INDEX_EDUCATION
 result_lapply=lapply(all_students_grade[,c(1,2,3,4)],index_education())
 
+
 ```
 ```{r}
 
