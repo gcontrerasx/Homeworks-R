@@ -1,0 +1,120 @@
+```{r}
+#1. VECTORES Y MATRICES
+
+#1.1 CREE UN VECTOR POR CADA ESTUDIANTE
+S1<-c(50.4,63.3,92.1,77.6,TRUE)
+S2<-c(41.7,87.9,75.3,72.4,FALSE)
+S3<-c(30.3,67.8,69.3,71.2,FALSE)
+S4<-c(65.4,85.1,92.3,69.8,TRUE)
+S5<-c(70.4,88.2,95.2,90.7,TRUE)
+
+#1.2 CREE EL VECTOR STUDENTS_VECTOR
+students_vector<-c(S1,S2,S3,S4,S5)
+
+#1.3 CONSTRUYA UNA MATRIZ STUDENTS_MATRIX
+students_matrix<-matrix(students_vector,byrow=TRUE, nrow=5)
+students_matrix
+```
+```{r}
+#2.1 CREE LOS VECTORES NAME_STUDENTS Y NAME_COURSES_LEGAL_AGE
+name_students<-c("Lily Brown", "DavisMoore", "Susan Taylor", "Mike Jones","Tom Hill")
+name_courses_legal_age = c("TIC", "Accounting", "Psychology", "Ethics", "Legal_age")
+
+#2.2 UTILICE ESTOS VECTORES PARA CREAR EL NOMBRADO DE FILAS Y COLUMNAS
+colnames(students_matrix)<-name_courses_legal_age
+rownames(students_matrix)<-name_students
+students_matrix
+```
+```{r}
+#3 ROWSUM, CBIND
+#3.1 CREAR VECTOR TOTAL_GRADE_STUDENT
+total_grade_student<-rowSums(students_matrix[,1:4])
+total_grade_student
+
+#3.2 PEGUE EL VECTOR TOTAL_GRADE_STUDENT CON LA MATRIX STUDENTS_MATRIX
+result_students<-cbind(students_matrix,total_grade_student)
+result_students
+
+```
+```{r}
+#4.1 DE LA MATRIZ RESULT_STUDENT SELECCIONE LA FILA 1,3,5 Y COLUMNAS 2,4
+selected_elements<-result_students[c(1,3,5),c(2,4)]
+selected_elements
+```
+```{r}
+#5 DATA FRAMES
+#5.1 CONSTRUYA UN DATAFRAME STUDENTS_GRADES_DF
+students_grades_df<-data.frame(result_students)
+students_grades_df
+
+#5.2 UTILICE LA FUNCIN SUBSET EN STUDENTS_GRADES_DF
+subset(students_grades_df,subset = Accounting>80 & Legal_age ==TRUE)
+```
+```{r}
+
+
+#6 FUNCIONES, CONDICIONALES Y BUCLES
+#6.1 CONSTRUYA UNA FUNCION STUDENTS_PROJECTION
+students_projection<-function(variable1){
+  for (k in 1:nrow(variable1)){
+    for (j in 1:ncol(variable1)){
+  print(variable1[k,j])
+  }
+   }
+}
+
+students_projection(result_students)
+
+#6.2 RECORRER FILAS Y COLUMNAS OBTENER EL VALOR DE LA NOTA
+#6.2.1, 6.6.2.2 Y 6.2.3 EVALUACION NOTA
+students_projection<-function(variable1){
+  for (k in 1:nrow(variable1)){
+    for (j in 1:ncol(variable1)){
+    if (variable1[k,j]<=45){
+      print(paste("Student at risk",variable1[k,j]))
+    }
+    if (variable1[k,j]>45 & variable1[k,j]<61){
+      print(paste("Student may be approved",variable1[k,j]))
+    }
+    else{
+      print(paste("Student approved",variable1[k,j]))
+    }
+      #print(variable1[k,j])
+}
+}
+}
+
+students_projection(result_students)
+
+```
+
+
+
+```{r}
+#Ejemplo calcular la media de las columnas: age, height, weight
+apply(team_df[,c(2,3,4)],2,mean)
+
+#7. DATA FRAMES Y LAPPY
+#7.1 CONTRUYA LA FUNCION INDEX_EDUCATION
+index_education<-function(grade){
+  index_e=(1+(grade/100))/2
+  return (index_e)
+}
+
+
+#7.2 UTILICE STUDENTS_GRADE_DF 
+all_students_grade=index_education(students_grades_df[,c(1,2,3,4)])
+all_students_grade
+
+#7.3 UTILICE LAPPLY PASANDO DE PASANDO LA FUNCION INDEX_EDUCATION
+result_lapply=lapply(all_students_grade[,c(1,2,3,4)],index_education())
+
+```
+```{r}
+
+#8. MATH UTILITIES
+#8.1 UTILICE STUDENTS_GRADES_DF OBTENER PROMEDIO 4 ASIGNATURAS
+score_mean=apply(students_grades_df[,c(1,2,3,4)],2,mean)
+score_mean
+
+```
