@@ -108,7 +108,7 @@ all_students_grade
 
 #7.3 UTILICE LAPPLY PASANDO DE PASANDO LA FUNCION INDEX_EDUCATION
 result_lapply=lapply(all_students_grade[,c(1,2,3,4)],index_education())
-
+result_lapply
 
 ```
 ```{r}
@@ -117,5 +117,4 @@ result_lapply=lapply(all_students_grade[,c(1,2,3,4)],index_education())
 #8.1 UTILICE STUDENTS_GRADES_DF OBTENER PROMEDIO 4 ASIGNATURAS
 score_mean=apply(students_grades_df[,c(1,2,3,4)],2,mean)
 score_mean
-
 ```
