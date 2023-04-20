@@ -1,0 +1,108 @@
+#HOMEWORK-4, 21 ABRIL 2023.
+#USAC, MAESTRIA INGENIERIA PARA INDUSTRIA CON ESPECIALIDAD EN CIENCIA DE COMPUTACION.
+#CATEDRATICO: MSC ING. EDWIN ESTUARDO ZAPETA GOMEZ.
+#CLASE: FUNDAMENTOS DE PROGRAMACION Y SCRIPTING.
+#ALUMNO: GERMAN CONTRERAS JACINTO.
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+#CONSTRUYA LA VARIABLE DIAMONDS QUE CONTENGA LA LECTURA DEL CSV
+```{r}
+diamonds_data<-read.csv("diamonds.csv")
+diamonds_data
+```
+#DISPERSION
+#1.1 CONSTRUYA UN GRAFICO DE DISPERSION COLOCANDO LA EN LA ESTETICA
+#LA ESTETICA CARAT(EJE X) VERSUS PRICE(EJEY,) LUEGO DEVUELVA EL GRAFICO
+```{r}
+ggplot(diamonds_data, aes(x=carat, y=price)) + geom_point()
+```
+#1.2 EDITE LA ESTETICA Y MAPEE EL COLOR CON LA VARIABLE CLARITY
+
+```{r}
+ggplot(diamonds_data, aes(x=carat, y=price, color=clarity))+geom_point()
+```
+# 2. HISTOGRAMA
+#2.1 CONSTRUYA EL TIPO DE GEOMETRIA HISTOGRAMA PARA LA VARIABLE PRICE
+#CONFIGURE EL PARAMETRO BINS CON EL VALOR 40 Y DEVUELVA EL GRAFICO
+```{r}
+ggplot(diamonds_data, aes(x=price))+geom_histogram(bins=40)
+
+```
+#2.2. AGREGUE UNA ESCALA LOGARITMICA DE BASE 10 Y DEVUELVA EL GRAFICO PARA VER LA DIFERENCIA
+```{r}
+ggplot(diamonds_data, aes(x=price))+geom_histogram(bins=40)+scale_x_log10()
+```
+#3.BOXPLOTS
+#3.1 CONSTRUYA UN GRAFICO DE CAJAS COLOCANDO EN LA ESTETICA LA VARIABLE CUT
+#(EJEX) VERSUS PRICE(EJE Y).  AGREGUE UNA ESCALA LOGARITMICA POR DEFECTO
+#Y POR ULTIMO DEVUELVA EL GRAFICO
+```{r}
+ggplot(diamonds_data, aes(x=cut, y=price))+geom_boxplot()+scale_y_log10()
+```
+#3.2 EDITE EL COLOR DE CADA CAJA CON EL PARAMETRO FILL DENTRO DE LA ESTETICA
+#Y ASIGNANDO LA VARIABLE CUT.POR ULTIMO DEVUELVA EL GRAFICO.
+```{r}
+ggplot(diamonds_data, aes(x=cut, y=price, fill=cut))+ geom_boxplot()+scale_y_log10()
+```
+#4 FACETING
+#4.1 FILTRE DIAMONDS POR LA VARIABLE PRICE QUE SEA MAYOR A 1000 Y POR CUT
+#QUE CONTENGA LAS CATEGORIAS GOOD, IDEAL AND PREMIUN. LUEGO ASIGNE EL
+#RESULTADO A LA VARIABLE FILTERED_PRICE. DADO QUE CUT DEBE TOMAR EN CUENTA
+#TRES CATEGORIAS ESPECIFICAS PUEDE HACER USO DEL PIPE %IN%.
+```{r}
+filtered_price<-diamonds_data%>%
+  filter(price>1000,)%>% #cut=="Ideal"|cut=="Good"|cut=="Premium")%>%
+  filter(cut %in% c("Ideal","Good","Premium"))%>%
+arrange(desc(price))
+filtered_price
+```
+#4.2 UTILICE LA VARIABLE FILTERED_PRICE PARA CONSTRUIR UN GRAFICO DE BARRAS
+#EN LA ESTETICA CONFIGURE X=CUT, Y=DEPTH.
+```{r}
+ggplot(filtered_price, aes(x=cut, y=depth))+geom_col()
+```
+#4.3 POR ULTIMO APLIQUE FACETING PARA LA VARIABLE CLARITY Y DEVUELVA
+#LA PARCELA DE GRAFICOS
+```{r}
+ggplot(filtered_price,aes(x=clarity,y=depth))+geom_col()+facet_wrap(~ clarity)
+  
+```
+#4.4 EDITE LA ESTETICA Y CONFIGURE EL PARAMETRO FILL CON LA VARIABLE CLARITY
+#LUEGO DEVUELVA LA PARCELA DE GRAFICOS CON ESTA MODIFICACION.
+```{r}
+ggplot(filtered_price, aes(x=clarity, y=depth, fill=clarity))+geom_col()+facet_wrap(~ clarity)
+
+```
+#5.GROUPING AND SUMMARIZING
+#5.1 UTILICE DIAMONDS PARA CONSTRUIR UN AGRUPAMIENTO POR LA VARIABLE CUT
+#LUEGO APLIQUE SUMMARIZE PARA ENCONTRAR LA MEDIA DE LAS VARIABLES X,Y,Z.
+```{r}
+median_dimension_diamond <- diamonds_data%>%
+  group_by(cut)%>%
+  summarize(mediaX=median(x),mediaY=median(y),mediaZ=median(z))
+median_dimension_diamond
+```
+#5.2 UTILICE DIAMONDS PARA FILTRAR POR LA VARIABLE CUT IGUAL A PREMIUM
+#LUEGO AGRUPE POR LA VARIABLE CLARITY Y UTILIZE SUMMARIZE PARA ENCONTRAR
+#EL MINIMO Y MAXIMO DE PRICE
+```{r}
+cut_premium<-diamonds_data%>%
+  filter(cut=="Premium")%>%
+  group_by(clarity)%>%
+  summarize(minPrice=min(price),maxPrice=max(price))
+cut_premium
+```
+#5.3 CONSTRUYA UN GRAFICO DE BARRAS Y UTILICE CUT_PREMIUM COMO SET DE DATOS
+#CONFIGURE X=CLARITY, Y=MAXPRICE Y EL COLOR DE RELLENO FILL CON LA VARIABLE
+#CLARITY
+```{r}
+ggplot(cut_premium, aes(x=clarity,y=maxPrice, fill=clarity))+geom_col()
+```
+```{r}
+summary(diamonds_data)
+```
+
+
