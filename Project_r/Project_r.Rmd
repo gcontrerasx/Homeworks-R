@@ -1,0 +1,176 @@
+#PROYECT-R, 26 ABRIL 2023.
+#USAC, MAESTRIA INGENIERIA PARA INDUSTRIA CON ESPECIALIDAD EN CIENCIA DE COMPUTACION.
+#CATEDRATICO: MSC ING. EDWIN ESTUARDO ZAPETA GOMEZ.
+#CLASE: FUNDAMENTOS DE PROGRAMACION Y SCRIPTING.
+#ALUMNO: GERMAN CONTRERAS JACINTO.
+
+
+
+#1. CONOCIENDO LOS DATOS
+#1.1 CARGUE EL PAQUETE TIDYVERSE
+```{r}
+library(tidyverse)
+```
+#1.2 LEA EL ARCHIVO DEATHS_HANDWASHING.CSV Y ASIGNELO A LA VARIABLE YEARLY.
+```{r}
+yearly<-read.csv("deaths_handwashing.csv")
+
+```
+#1.3 IMPRIMA LA VARIABLE YEARLY
+```{r}
+yearly
+```
+#2 EL ALARMANTE NUMERO DE MUERTES
+#2.1 USE MUTATE PARA AGREGAR LA COLUMNA PROPORTION_DEATHS A YEARLY, ESTA NUEVA COLUMNA SE CALCULARA COMO PROPORCION DE MUERTES POR NUMERO DE NACIMIENTOS
+```{r}
+yearly_deaths<-yearly%>%
+  mutate(proportion_deaths=deaths/births)
+yearly_deaths
+```
+#3 MUERTE EN LAS CLINICAS
+#3.1 UTILICE GGPLOT PARA HACER UNA GRAFICA LINEAL DE PROPORTION_DEATHS POR AÑO (COLUMNA YEAR) CON UNA LINEA POR CLINICA
+```{r}
+ggplot(yearly_deaths,aes(x=year,y=proportion_deaths, group=clinic))+geom_line()
+```
+#3.2 LAS LINEAS DEBEN TENER COLORES DISTINTOS
+```{r}
+ggplot(yearly_deaths,aes(x=year,y=proportion_deaths, group=clinic,colour=clinic))+geom_line()
+```
+#4 COMIENZA EL LAVADO DE MANOS
+#4.1 CARGUE LOS DATOS MENSUALES DE LA CLINICA 1 PARA VER SI EL LAVADO DE MANOS TUVO ALGUN EFECTO, PARA ESTO LEA EL ARCHIVO DEATHS_CLINIC_1.CSV Y ASIGNELO A LA VARIABLE MONTHLY
+```{r}
+monthly<-read.csv("deaths_clinic_1.csv")
+monthly
+```
+#4.2 AGREGUE LA COLUMNA PROPORTION_DEATHS A MONTHLY, ESTA NUEVA COLUMNA SE CALCULARÁ COMO LA PROPORCIÓN DE MUERTES POR NÚMERO DE NACIMIENTOS.
+```{r}
+monthly_deaths<-monthly%>%
+  mutate(proportion_deaths=deaths/births)
+```
+#4.3. Imprima las primeras filas de monthly usando la función head().
+```{r}
+head(monthly_deaths)
+```
+# 5. El efecto del lavado de manos
+# 5.1. Haga una gráfica lineal de proportion_deaths por fecha para el data frame monthly usando ggplot.
+```{r}
+
+monthly_deaths_graph<-monthly%>%
+  mutate(proportion_deaths=deaths/births)%>%
+  mutate(date_new=as.Date(date))
+monthly_deaths_graph
+
+ggplot(monthly_deaths_graph,aes(x=date_new,y=proportion_deaths))+geom_line()
+```
+#5.2. Utilice la función labs para dar al eje x y al eje y una estética a las etiquetas.
+```{r}
+ggplot(monthly_deaths_graph,aes(x=date_new,y=proportion_deaths))+geom_line()+labs(title="Proportion deaths", subtitle ="Date of death" )
+```
+
+# 5.3. Use group_by y summarise para encontrar la media por año y guárdelo en el dataset death_by_year.
+```{r}
+
+death_by_year<-monthly_deaths%>%
+  mutate(date_new=as.Date(date))%>%
+  mutate(new_year=as.numeric(format(date_new,"%Y")))%>%
+  group_by(new_year)%>%
+  summarize(year_median=mean(proportion_deaths))
+death_by_year
+```
+#5.4 Utilice el conjunto de datos death_by_year para crear un gráfico de barras que muestre la media en cada año.
+```{r}
+ggplot(death_by_year, aes(x=new_year,y=year_median))+geom_col()
+```
+#6. Los resultados del lavado de manos
+#6.1. Agregue una columna TRUE/FALSE a monthly llamado handwashing_started, que será TRUE a partir del año en que se impuso el lavado de manos.
+```{r}
+monthly
+monthly%>%
+  mutate(date_new=as.Date(date))%>%
+  mutate(new_year=as.numeric(format(date_new,"%Y")))%>%
+  mutate(handwashing_started = case_when(new_year<1847 ~ "False",new_year>=1847 ~ "True" ))
+```
+#6.2. Haga una gráfica lineal de proportion_deaths por fecha para el data frame monthly usando ggplot. Haga que el color de la línea dependa de handwashing_started.
+```{r}
+monthly_deaths_2<-monthly%>%
+  mutate(proportion_deaths=deaths/births)%>%
+  mutate(date_new=as.Date(date))%>%
+  mutate(new_year=as.numeric(format(date_new,"%Y")))%>%
+  mutate(handwashing_started = case_when(new_year<1847 ~ "False",new_year>=1847 ~ "True" ))%>%
+  mutate(color_line=case_when(handwashing_started=="False" ~ "red", handwashing_started=="True" ~"green"))
+monthly_deaths_2
+
+ggplot(monthly_deaths_2,aes(x=date_new,y=proportion_deaths,color=color_line))+geom_line()
+```
+#6.3. Utilice la función labs para dar al eje x y al eje y una estética a las etiquetas.
+#Dado que la columna monthly$date es una fecha, puede compararla con otras fechas utilizando los operadores de comparación (<,> =, ==, etc.).
+```{r}
+ggplot(monthly_deaths_2,aes(x=date_new,y=proportion_deaths,color=color_line))+geom_line()+labs(title="Proportion deaths", subtitle ="Date of death" )
+```
+#7. ¿Más lavado de manos, menos muertes?
+#7.1. Utilice group_by y summarise para calcular el promedio de proportion_deaths antes y después de que se impusiera el lavado de manos.
+```{r}
+monthly_deaths_2%>%
+  group_by(handwashing_started)%>%
+  summarize(proportion_deaths_mean=mean(proportion_deaths))
+
+
+```
+#7.2. Asigne el resultado en la variable month_summary e imprímala.
+```{r}
+monthly_summary<-monthly_deaths_2%>%
+  group_by(handwashing_started)%>%
+  summarize(proportion_deaths_mean=mean(proportion_deaths))
+monthly_summary
+```
+#8. Análisis estadístico de los datos de lavado de manos
+#Utilice la función t.test para calcular un intervalo de confianza del 95%. Los dos grupos que tenemos son proporción mensual de muertes antes y después de que comenzara el lavado de manos “proportion_deaths” y “handwashing_started”.
+```{r}
+monthly_deaths_sel<-monthly_deaths_2%>%
+select(handwashing_started,proportion_deaths)
+head(monthly_deaths_sel,3)
+```
+```{r}
+monthly_deaths_sel%>%
+group_by(handwashing_started)%>%
+get_summary_stats(proportion_deaths, type = "mean_sd")
+```
+```{r}
+library(ggpubr)
+result_t <- t.test(proportion_deaths ~ handwashing_started, data = monthly_deaths_sel, conf.level=0.95)
+result_t
+```
+
+
+
+```{r}
+# Wide format
+data("mice2", package = "datarium")
+mice2
+head(mice2, 3)
+```
+```{r}
+mice2.long <- mice2 %>%
+    gather(key = "group", value = "weight", before, after)
+    
+head(mice2.long, 3)
+mice2.long
+```
+```{r}
+mice2.long %>%
+  group_by(group) %>%
+  get_summary_stats(weight, type = "mean_sd")
+```
+```{r}
+res <- t.test(weight ~ group, data = mice2.long, paired = TRUE)
+res
+```
+```{r}
+#BIBLIOGRAFIA:
+# https://www.datanovia.com/en/lessons/how-to-do-a-t-test-in-r-calculation-and-reporting/
+# https://community.rstudio.com/t/ggplot-with-conditions/17352
+# https://www.r-bloggers.com/2022/07/how-to-do-conditional-mutate-in-r/
+# https://www.cienciadedatos.net/documentos/12_t-test
+# https://rpubs.com/Joaquin_AR/218467
+```
+
