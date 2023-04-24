@@ -25,6 +25,10 @@ yearly
 ```{r}
 yearly_deaths<-yearly%>%
   mutate(proportion_deaths=deaths/births)
+```
+
+#1.3. Imprima la variable yearly.
+```{r}
 yearly_deaths
 ```
 #3 MUERTE EN LAS CLINICAS
@@ -60,11 +64,11 @@ monthly_deaths_graph<-monthly%>%
   mutate(date_new=as.Date(date))
 monthly_deaths_graph
 
-ggplot(monthly_deaths_graph,aes(x=date_new,y=proportion_deaths))+geom_line()
+ggplot(monthly_deaths_graph,aes(x=date_new,y=proportion_deaths))+geom_line()+scale_x_date(date_breaks = "1 year")
 ```
 #5.2. Utilice la función labs para dar al eje x y al eje y una estética a las etiquetas.
 ```{r}
-ggplot(monthly_deaths_graph,aes(x=date_new,y=proportion_deaths))+geom_line()+labs(title="Proportion deaths", subtitle ="Date of death" )
+ggplot(monthly_deaths_graph,aes(x=date_new,y=proportion_deaths))+geom_line()+labs(y="Proportion Deaths",x="Date",title="Graph of proportion deaths vs births", subtitle ="Date of analysis: 1841 to 1849",caption="Data of clinic 1" )+scale_x_date(date_breaks = "1 year")
 ```
 
 # 5.3. Use group_by y summarise para encontrar la media por año y guárdelo en el dataset death_by_year.
@@ -79,7 +83,7 @@ death_by_year
 ```
 #5.4 Utilice el conjunto de datos death_by_year para crear un gráfico de barras que muestre la media en cada año.
 ```{r}
-ggplot(death_by_year, aes(x=new_year,y=year_median))+geom_col()
+ggplot(death_by_year, aes(x=new_year,y=year_median))+geom_col()+labs(y="Mean",x="Date",title="Graph of mean of proportion deaths", subtitle ="Date of analysis: 1841 to 1849",caption="Data of clinic 1" )+scale_x_continuous(breaks=c(1841:1849))
 ```
 #6. Los resultados del lavado de manos
 #6.1. Agregue una columna TRUE/FALSE a monthly llamado handwashing_started, que será TRUE a partir del año en que se impuso el lavado de manos.
@@ -92,6 +96,7 @@ monthly%>%
 ```
 #6.2. Haga una gráfica lineal de proportion_deaths por fecha para el data frame monthly usando ggplot. Haga que el color de la línea dependa de handwashing_started.
 ```{r}
+
 monthly_deaths_2<-monthly%>%
   mutate(proportion_deaths=deaths/births)%>%
   mutate(date_new=as.Date(date))%>%
@@ -100,12 +105,12 @@ monthly_deaths_2<-monthly%>%
   mutate(color_line=case_when(handwashing_started=="False" ~ "red", handwashing_started=="True" ~"green"))
 monthly_deaths_2
 
-ggplot(monthly_deaths_2,aes(x=date_new,y=proportion_deaths,color=color_line))+geom_line()
+ggplot(monthly_deaths_2,aes(x=date_new,y=proportion_deaths,color=color_line))+geom_line()+scale_x_date(date_breaks = "1 year")+theme(axis.text.x =element_text(size =10, angle = 45))
 ```
 #6.3. Utilice la función labs para dar al eje x y al eje y una estética a las etiquetas.
 #Dado que la columna monthly$date es una fecha, puede compararla con otras fechas utilizando los operadores de comparación (<,> =, ==, etc.).
 ```{r}
-ggplot(monthly_deaths_2,aes(x=date_new,y=proportion_deaths,color=color_line))+geom_line()+labs(title="Proportion deaths", subtitle ="Date of death" )
+ggplot(monthly_deaths_2,aes(x=date_new,y=proportion_deaths,color=color_line))+geom_line()+labs(title="Proportion deaths", subtitle ="Date of death" )+scale_x_date(date_breaks = "1 year")+theme(axis.text.x =element_text(size = 10, angle = 45))
 ```
 #7. ¿Más lavado de manos, menos muertes?
 #7.1. Utilice group_by y summarise para calcular el promedio de proportion_deaths antes y después de que se impusiera el lavado de manos.
@@ -141,7 +146,7 @@ result_t <- t.test(proportion_deaths ~ handwashing_started, data = monthly_death
 result_t
 ```
 
-
+#EJEMPLO PRUEBA DE HIPOTESIS 2 MUESTRAS T-STUDENT
 
 ```{r}
 # Wide format
@@ -172,5 +177,7 @@ res
 # https://www.r-bloggers.com/2022/07/how-to-do-conditional-mutate-in-r/
 # https://www.cienciadedatos.net/documentos/12_t-test
 # https://rpubs.com/Joaquin_AR/218467
+# https://rstudio-pubs-static.s3.amazonaws.com/748718_00d42d8f62f6427fa61107dde777f743.html
+
 ```
 
