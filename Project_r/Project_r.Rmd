@@ -135,18 +135,20 @@ monthly_deaths_sel<-monthly_deaths_2%>%
 select(handwashing_started,proportion_deaths)
 head(monthly_deaths_sel,3)
 ```
+#Caculo de media arimetica, desviacion estandar y cantidad de elementos.
 ```{r}
 monthly_deaths_sel%>%
 group_by(handwashing_started)%>%
 get_summary_stats(proportion_deaths, type = "mean_sd")
 ```
+#Prueba de hipotesis T-STUDENT.
 ```{r}
 library(ggpubr)
 result_t <- t.test(proportion_deaths ~ handwashing_started, data = monthly_deaths_sel, conf.level=0.95)
 result_t
 ```
 
-#EJEMPLO PRUEBA DE HIPOTESIS 2 MUESTRAS T-STUDENT
+#EJEMPLO PRUEBA DE HIPOTESIS 2 MUESTRAS DEPENDIENTES T-STUDENT
 
 ```{r}
 # Wide format
